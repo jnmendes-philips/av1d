@@ -13,8 +13,8 @@
         
         <form method="post" action="Geral?op=login">
         <!--    <input type="hidden" name="op" value="login"> -->
-            Login: <input type="text" name="login" value="admin"> <br>
-            Senha: <input type="password" name="senha" value="123"> <br>
+            Login: <input type="text" name="login" value="root"> <br>
+            Senha: <input type="password" name="senha" value="testando"> <br>
             <input type="submit" value="Login" />
         </form>
         

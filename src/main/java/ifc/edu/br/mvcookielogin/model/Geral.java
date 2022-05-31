@@ -12,6 +12,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -106,7 +111,15 @@ public class Geral extends HttpServlet {
         } else if (op.equals("login")) {
             String login = request.getParameter("login");
             String senha = request.getParameter("senha");
-            if (login.equals("admin") && senha.equals("123")) {
+            boolean oklogin;
+            try {
+                Connection c = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/jeffersonmendes_pgm4?useSSL=false", login, senha);
+                oklogin = true;
+            } catch (SQLException ex) {
+                Logger.getLogger(Geral.class.getName()).log(Level.SEVERE, null, ex);
+                oklogin = false;
+            }
+            if (oklogin) {
                 sessao.setAttribute("login", login);
                 sessao.setAttribute("mensagem", "Login efetuado com sucesso");
 
