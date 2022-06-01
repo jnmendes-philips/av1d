@@ -14,7 +14,10 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -113,8 +116,17 @@ public class Geral extends HttpServlet {
             String senha = request.getParameter("senha");
             boolean oklogin;
             try {
-                Connection c = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/jeffersonmendes_pgm4?useSSL=false", login, senha);
-                oklogin = true;
+                Connection c = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/jeffersonmendes_pgm4?useSSL=false", "root", "testando");
+                Statement stmt = c.createStatement();
+                stmt.executeUpdate("create table if not exists usuario (id integer not null, nome varchar(255), senha varchar(255), primary key (id))");
+                stmt.executeUpdate("delete from usuario");
+                stmt.executeUpdate("insert into usuario (id, nome, senha) values (1, 'root', MD5('testando'))");
+                PreparedStatement ps = c.prepareStatement("select count(1) from usuario where nome = ? and senha = MD5(?)");
+                ps.setString(1, login);
+                ps.setString(2, senha);
+                ResultSet rs = ps.executeQuery();
+                rs.next();
+                oklogin = rs.getInt(1) > 0;
             } catch (SQLException ex) {
                 Logger.getLogger(Geral.class.getName()).log(Level.SEVERE, null, ex);
                 oklogin = false;
